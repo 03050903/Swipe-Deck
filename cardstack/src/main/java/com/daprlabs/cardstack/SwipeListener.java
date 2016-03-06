@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
 
 import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 
 import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
@@ -92,24 +93,24 @@ public class SwipeListener implements View.OnTouchListener {
 
                 //calc rotation here
 
-                float posX = card.getX() + dx;
-                float posY = card.getY() + dy;
+                float posX = ViewHelper.getX(card) + dx;
+                float posY = ViewHelper.getY(card) + dy;
 
-                card.setX(posX);
-                card.setY(posY);
+                ViewHelper.setX(card,posX);
+                ViewHelper.setY(card,posY);
 
                 //card.setRotation
                 float distobjectX = posX - initialX;
                 float rotation = ROTATION_DEGREES * 2.f * distobjectX / parentWidth;
-                card.setRotation(rotation);
+                ViewHelper.setRotation(card,rotation);
 
                 if (rightView != null && leftView != null) {
                     //set alpha of left and right image
                     float alpha = (((posX - paddingLeft) / (parentWidth * OPACITY_END)));
                     //float alpha = (((posX - paddingLeft) / parentWidth) * ALPHA_MAGNITUDE );
                     //Log.i("alpha: ", Float.toString(alpha));
-                    rightView.setAlpha(alpha);
-                    leftView.setAlpha(-alpha);
+                    ViewHelper.setAlpha(rightView,alpha);
+                    ViewHelper.setAlpha(leftView,-alpha);
                 }
 
                 break;
@@ -188,17 +189,17 @@ public class SwipeListener implements View.OnTouchListener {
 
     private boolean cardBeyondLeftBorder() {
         //check if cards middle is beyond the left quarter of the screen
-        return (card.getX() + (card.getWidth() / 2) < (parent.getWidth() / 4.f));
+        return (ViewHelper.getX(card) + (card.getWidth() / 2) < (parent.getWidth() / 4.f));
     }
 
     private boolean cardBeyondRightBorder() {
         //check if card middle is beyond the right quarter of the screen
-        return (card.getX() + (card.getWidth() / 2) > ((parent.getWidth() / 4.f) * 3));
+        return (ViewHelper.getX(card) + (card.getWidth() / 2) > ((parent.getWidth() / 4.f) * 3));
     }
 
     private ViewPropertyAnimator resetCardPosition() {
-        if (rightView != null) rightView.setAlpha(0);
-        if (leftView != null) leftView.setAlpha(0);
+        if (rightView != null) ViewHelper.setAlpha(rightView,0);
+        if (leftView != null) ViewHelper.setAlpha(leftView,0);
         return animate(card)
                 .setDuration(200)
                 .setInterpolator(new OvershootInterpolator(1.5f))

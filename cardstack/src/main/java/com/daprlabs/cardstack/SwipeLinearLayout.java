@@ -20,6 +20,7 @@ public class SwipeLinearLayout extends LinearLayout {
         setClipChildren(false);
     }
 
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public SwipeLinearLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setClipChildren(false);

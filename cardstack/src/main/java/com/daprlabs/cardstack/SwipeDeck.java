@@ -272,7 +272,6 @@ public class SwipeDeck extends FrameLayout {
 
     private void setupTopCard(final int cardPosition) {
         final View child = getChildAt(0);
-
         //this calculation is to get the correct position in the adapter of the current top card
         //the card position on setup top card is currently always the bottom card in the view
         //at any given time.
@@ -310,7 +309,6 @@ public class SwipeDeck extends FrameLayout {
             if (!(leftImageResource == 0)) leftView = child.findViewById(leftImageResource);
             swipeListener.setLeftView(leftView);
             swipeListener.setRightView(rightView);
-
             child.setOnTouchListener(swipeListener);
         }
     }
