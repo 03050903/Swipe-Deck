@@ -12,6 +12,9 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.FrameLayout;
 
+import com.nineoldandroids.view.ViewHelper;
+import com.nineoldandroids.view.ViewPropertyAnimator;
+
 /**
  * Created by aaron on 4/12/2015.
  */
@@ -155,15 +158,15 @@ public class SwipeDeck extends FrameLayout {
     private void removeTopCard() {
         View child = getChildAt(0);
         child.setOnTouchListener(null);
-        child.setX(0);
-        child.setY(0);
-        child.setRotation(0);
+        ViewHelper.setX(child, 0);
+        ViewHelper.setY(child, 0);
+        ViewHelper.setRotation(child, 0);
         removeView(child);
         // Record that this view was removed so that the next call to addNextCard can reuse it.
         lastRemovedView = child;
 
         //if there are no more children left after top card removal let the callback know
-        if(getChildCount() <= 0 && eventCallback != null){
+        if (getChildCount() <= 0 && eventCallback != null) {
             eventCallback.cardsDepleted();
         }
     }
@@ -177,7 +180,7 @@ public class SwipeDeck extends FrameLayout {
             this.lastRemovedView = null;
 
             //set the initial Y value so card appears from under the deck
-            newBottomChild.setY(paddingTop);
+            ViewHelper.setY(newBottomChild, paddingTop);
             addAndMeasureChild(newBottomChild);
             nextAdapterCard++;
         }
@@ -209,8 +212,8 @@ public class SwipeDeck extends FrameLayout {
 
         //ensure that if there's a left and right image set their alpha to 0 initially
         //alpha animation is handled in the swipe listener
-        if(leftImageResource != 0) child.findViewById(leftImageResource).setAlpha(0);
-        if(rightImageResource != 0) child.findViewById(rightImageResource).setAlpha(0);
+        if (leftImageResource != 0) ViewHelper.setAlpha(child.findViewById(leftImageResource), 0);
+        if (rightImageResource != 0) ViewHelper.setAlpha(child.findViewById(rightImageResource), 0);
     }
 
     /**
@@ -225,8 +228,8 @@ public class SwipeDeck extends FrameLayout {
         int left = (getWidth() - width) / 2;
         child.layout(left, paddingTop, left + width, paddingTop + height);
         //layout each child slightly above the previous child (we start with the bottom)
-        child.animate()
-                .setDuration(200)
+
+        ViewPropertyAnimator.animate(child).setDuration(200)
                 .y(paddingTop + index * CARD_SPACING);
     }
 
@@ -285,14 +288,15 @@ public class SwipeDeck extends FrameLayout {
                 @Override
                 public void cardSwipedLeft() {
                     removeTopCard();
-                    if(eventCallback != null)eventCallback.cardSwipedLeft(pos);
+                    if (eventCallback != null) eventCallback.cardSwipedLeft(pos);
                     addNextCard();
                 }
+
                 @Override
                 public void cardSwipedRight() {
                     removeTopCard();
                     addNextCard();
-                    if(eventCallback != null)eventCallback.cardSwipedRight(pos);
+                    if (eventCallback != null) eventCallback.cardSwipedRight(pos);
                 }
 
             }, initialX, initialY, ROTATION_DEGREES, OPACITY_END);
@@ -302,8 +306,8 @@ public class SwipeDeck extends FrameLayout {
             //for the sake of animating them
             View rightView = null;
             View leftView = null;
-            if(!(rightImageResource == 0)) rightView = child.findViewById(rightImageResource);
-            if(!(leftImageResource == 0)) leftView = child.findViewById(leftImageResource);
+            if (!(rightImageResource == 0)) rightView = child.findViewById(rightImageResource);
+            if (!(leftImageResource == 0)) leftView = child.findViewById(leftImageResource);
             swipeListener.setLeftView(leftView);
             swipeListener.setRightView(rightView);
 
@@ -315,27 +319,30 @@ public class SwipeDeck extends FrameLayout {
         this.eventCallback = eventCallback;
     }
 
-    public void setPositionCallback(CardPositionCallback callback){
+    public void setPositionCallback(CardPositionCallback callback) {
         cardPosCallback = callback;
     }
 
-    public void setLeftImage(int imageResource){
+    public void setLeftImage(int imageResource) {
         leftImageResource = imageResource;
     }
 
-    public void setRightImage(int imageResource){
+    public void setRightImage(int imageResource) {
         rightImageResource = imageResource;
     }
 
     public interface SwipeEventCallback {
         //returning the object position in the adapter
         void cardSwipedLeft(int position);
+
         void cardSwipedRight(int position);
+
         void cardsDepleted();
     }
 
     public interface CardPositionCallback {
         void xPos(Float x);
+
         void yPos(Float y);
     }
 }

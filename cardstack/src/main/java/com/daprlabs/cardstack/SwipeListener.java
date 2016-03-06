@@ -1,12 +1,14 @@
 package com.daprlabs.cardstack;
 
-import android.animation.Animator;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewPropertyAnimator;
 import android.view.animation.OvershootInterpolator;
+
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.view.ViewPropertyAnimator;
+
+import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
 
 /**
  * Created by aaron on 4/12/2015.
@@ -101,7 +103,7 @@ public class SwipeListener implements View.OnTouchListener {
                 float rotation = ROTATION_DEGREES * 2.f * distobjectX / parentWidth;
                 card.setRotation(rotation);
 
-                if (rightView != null && leftView != null){
+                if (rightView != null && leftView != null) {
                     //set alpha of left and right image
                     float alpha = (((posX - paddingLeft) / (parentWidth * OPACITY_END)));
                     //float alpha = (((posX - paddingLeft) / parentWidth) * ALPHA_MAGNITUDE );
@@ -195,9 +197,9 @@ public class SwipeListener implements View.OnTouchListener {
     }
 
     private ViewPropertyAnimator resetCardPosition() {
-        if(rightView!=null)rightView.setAlpha(0);
-        if(leftView!=null)leftView.setAlpha(0);
-        return card.animate()
+        if (rightView != null) rightView.setAlpha(0);
+        if (leftView != null) leftView.setAlpha(0);
+        return animate(card)
                 .setDuration(200)
                 .setInterpolator(new OvershootInterpolator(1.5f))
                 .x(initialX)
@@ -206,7 +208,7 @@ public class SwipeListener implements View.OnTouchListener {
     }
 
     private ViewPropertyAnimator animateOffScreenLeft() {
-        return card.animate()
+        return animate(card)
                 .setDuration(150)
                 .x(-(parent.getWidth()))
                 .y(0)
@@ -214,7 +216,7 @@ public class SwipeListener implements View.OnTouchListener {
     }
 
     private ViewPropertyAnimator animateOffScreenRight() {
-        return card.animate()
+        return animate(card)
                 .setDuration(150)
                 .x(parent.getWidth())
                 .y(0)
@@ -231,6 +233,7 @@ public class SwipeListener implements View.OnTouchListener {
 
     public interface SwipeCallback {
         void cardSwipedLeft();
+
         void cardSwipedRight();
     }
 }

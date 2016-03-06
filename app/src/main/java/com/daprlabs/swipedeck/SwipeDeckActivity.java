@@ -129,7 +129,7 @@ public class SwipeDeckActivity extends AppCompatActivity {
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String item = (String)getItem(position);
+                    String item = (String) getItem(position);
                     Log.i("MainActivity", item);
                 }
             });
